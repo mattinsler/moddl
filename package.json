@@ -26,7 +26,8 @@
     "node": ">= 0.8.0"
   },
   "dependencies": {
-    "q": "~0.9.7"
+    "q": "~0.9.7",
+    "betturl": "~0.2.3"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

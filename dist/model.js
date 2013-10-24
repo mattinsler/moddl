@@ -1,10 +1,12 @@
 (function() {
-  var Model, q,
+  var Model, betturl, q,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __slice = [].slice;
 
   q = require('q');
+
+  betturl = require('betturl');
 
   Model = (function() {
     function Model() {
@@ -32,7 +34,7 @@
     }
 
     Model.connect = function(opts) {
-      var err, k, name, v, _results;
+      var cfg, config, err, k, kk, v, vv, _results;
       try {
         opts = Object.keys(opts).reduce(function(o, k) {
           o[k.toLowerCase()] = opts[k];
@@ -45,9 +47,30 @@
       _results = [];
       for (k in this) {
         v = this[k];
-        name = k.toLowerCase();
-        if (opts[name] != null) {
-          _results.push(v.connect(opts[name]));
+        if (!(k[0].toUpperCase() === k[0])) {
+          continue;
+        }
+        config = opts[k.toLowerCase()];
+        if (config != null) {
+          try {
+            if (typeof config === 'string') {
+              cfg = betturl.parse(config);
+            } else if (config.url != null) {
+              cfg = betturl.parse(config.url);
+              for (kk in config) {
+                vv = config[kk];
+                if (kk !== 'url') {
+                  cfg[kk] = vv;
+                }
+              }
+            } else {
+              cfg = config;
+            }
+          } catch (_error) {
+            err = _error;
+            console.log(err.stack);
+          }
+          _results.push(v.connect(cfg));
         } else {
           _results.push(void 0);
         }
