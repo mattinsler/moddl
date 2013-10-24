@@ -31,6 +31,30 @@
       (_ref1 = this.__model__).load.apply(_ref1, [this].concat(__slice.call(Array.prototype.slice.call(arguments, 1))));
     }
 
+    Model.connect = function(opts) {
+      var err, k, name, v, _results;
+      try {
+        opts = Object.keys(opts).reduce(function(o, k) {
+          o[k.toLowerCase()] = opts[k];
+          return o;
+        }, {});
+      } catch (_error) {
+        err = _error;
+        throw new Error('moddl.Model.connect accepts an object of the form {"model-type": { config... }}');
+      }
+      _results = [];
+      for (k in this) {
+        v = this[k];
+        name = k.toLowerCase();
+        if (opts[name] != null) {
+          _results.push(v.connect(opts[name]));
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
+    };
+
     Model.wrapper = function(model) {
       return function(data) {
         if (data == null) {

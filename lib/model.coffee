@@ -12,6 +12,19 @@ class Model
     
     @__model__.load(@, Array::slice.call(arguments, 1)...)
   
+  @connect: (opts) ->
+    try
+      opts = Object.keys(opts).reduce (o, k) ->
+        o[k.toLowerCase()] = opts[k]
+        o
+      , {}
+    catch err
+      throw new Error('moddl.Model.connect accepts an object of the form {"model-type": { config... }}')
+    
+    for k, v of @
+      name = k.toLowerCase()
+      v.connect(opts[name]) if opts[name]?
+  
   @wrapper: (model) ->
     (data) ->
       return null unless data?
