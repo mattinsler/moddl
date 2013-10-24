@@ -59,33 +59,19 @@
 
     Model.defer = function(method) {
       return function() {
-        var args, callback, d, done, result;
+        var args, callback, d;
         d = q.defer();
         args = Array.prototype.slice.call(arguments);
         if (typeof args[args.length - 1] === 'function') {
           callback = args.pop();
         }
-        done = function() {
-          var err, results;
-          err = arguments[0], results = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-          if (err != null) {
-            d.reject(err);
-            if (typeof callback === "function") {
-              callback(err);
-            }
-            return;
-          }
-          d.resolve.apply(d, results);
-          return typeof callback === "function" ? callback.apply(null, [null].concat(__slice.call(results))) : void 0;
-        };
-        result = method.call.apply(method, [this].concat(__slice.call(args), [done]));
-        if (q.isPromise(result)) {
-          result.then(function() {
-            return done.apply(null, [null].concat(__slice.call(arguments)));
-          })["catch"](function(err) {
-            return done(err);
-          });
-        }
+        q.when(method.call.apply(method, [this].concat(__slice.call(args)))).then(function(result) {
+          d.resolve(result);
+          return typeof callback === "function" ? callback(null, result) : void 0;
+        })["catch"](function(err) {
+          d.reject(err);
+          return typeof callback === "function" ? callback(err) : void 0;
+        });
         return d.promise;
       };
     };

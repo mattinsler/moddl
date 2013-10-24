@@ -31,23 +31,14 @@ class Model
       d = q.defer()
       args = Array::slice.call(arguments)
       callback = args.pop() if typeof args[args.length - 1] is 'function'
-
-      done = (err, results...) ->
-        if err?
-          d.reject(err)
-          callback?(err)
-          return
-
-        d.resolve(results...)
-        callback?(null, results...)
-
-      result = method.call(@, args..., done)
-      if q.isPromise(result)
-        result
-        .then ->
-          done(null, arguments...)
-        .catch (err) ->
-          done(err)
+      
+      q.when(method.call(@, args...))
+      .then (result) ->
+        d.resolve(result)
+        callback?(null, result)
+      .catch (err) ->
+        d.reject(err)
+        callback?(err)
 
       d.promise
 
