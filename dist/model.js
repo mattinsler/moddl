@@ -141,6 +141,14 @@
       return res;
     };
 
+    Model.hydrate = function(model, instance_data) {
+      return new model(instance_data);
+    };
+
+    Model.dehydrate = function(instance) {
+      return this.strip(instance);
+    };
+
     return Model;
 
   })();

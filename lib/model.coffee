@@ -74,6 +74,8 @@ class Model
   # This method will create a new object with all enumerable plain data properties on an object and it's prototypes that are not functions.
   #   Will remove all getters or setters that do not have an actual data component.
   @strip: (obj) ->
+    return null unless obj?
+    
     res = {}
     proto = obj
 
@@ -84,5 +86,13 @@ class Model
       proto = proto.__proto__
 
     res
+  
+  @hydrate: (model, instance_data) ->
+    return null unless instance_data?
+    new model(instance_data)
+  
+  @dehydrate: (instance) ->
+    # can do something here with the actual model which should be stored at __model__
+    @strip(instance)
 
 module.exports = Model
