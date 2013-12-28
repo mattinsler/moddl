@@ -69,5 +69,20 @@ class Model
         callback?(err)
 
       d.promise
+  
+  # Strip all properties from an object that aren't discrete data - Used for serialization of Model data
+  # This method will create a new object with all enumerable plain data properties on an object and it's prototypes that are not functions.
+  #   Will remove all getters or setters that do not have an actual data component.
+  @strip: (obj) ->
+    res = {}
+    proto = obj
+
+    while proto isnt Object.prototype
+      for k in Object.getOwnPropertyNames(proto)
+        d = Object.getOwnPropertyDescriptor(proto, k)
+        res[k] = obj[k] if d.value? and d.enumerable is true and typeof d.value isnt 'function'
+      proto = proto.__proto__
+
+    res
 
 module.exports = Model

@@ -123,6 +123,24 @@
       };
     };
 
+    Model.strip = function(obj) {
+      var d, k, proto, res, _i, _len, _ref;
+      res = {};
+      proto = obj;
+      while (proto !== Object.prototype) {
+        _ref = Object.getOwnPropertyNames(proto);
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          k = _ref[_i];
+          d = Object.getOwnPropertyDescriptor(proto, k);
+          if ((d.value != null) && d.enumerable === true && typeof d.value !== 'function') {
+            res[k] = obj[k];
+          }
+        }
+        proto = proto.__proto__;
+      }
+      return res;
+    };
+
     return Model;
 
   })();
