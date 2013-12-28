@@ -125,6 +125,9 @@
 
     Model.strip = function(obj) {
       var d, k, proto, res, _i, _len, _ref;
+      if (obj == null) {
+        return null;
+      }
       res = {};
       proto = obj;
       while (proto !== Object.prototype) {
@@ -142,6 +145,9 @@
     };
 
     Model.hydrate = function(model, instance_data) {
+      if (instance_data == null) {
+        return null;
+      }
       return new model(instance_data);
     };
 
