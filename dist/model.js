@@ -34,7 +34,7 @@
     }
 
     Model.connect = function(opts) {
-      var cfg, config, err, k, kk, v, vv, _results;
+      var config, err, k, v, _results;
       try {
         opts = Object.keys(opts).reduce(function(o, k) {
           o[k.toLowerCase()] = opts[k];
@@ -52,25 +52,7 @@
         }
         config = opts[k.toLowerCase()];
         if (config != null) {
-          try {
-            if (typeof config === 'string') {
-              cfg = betturl.parse(config);
-            } else if (config.url != null) {
-              cfg = betturl.parse(config.url);
-              for (kk in config) {
-                vv = config[kk];
-                if (kk !== 'url') {
-                  cfg[kk] = vv;
-                }
-              }
-            } else {
-              cfg = config;
-            }
-          } catch (_error) {
-            err = _error;
-            console.log(err.stack);
-          }
-          _results.push(v.connect(cfg));
+          _results.push(v.connect(config));
         } else {
           _results.push(void 0);
         }

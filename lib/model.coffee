@@ -25,20 +25,21 @@ class Model
     for k, v of @ when k[0].toUpperCase() is k[0]
       config = opts[k.toLowerCase()]
       
-      if config?
-        try
-          if typeof config is 'string'
-            cfg = betturl.parse(config)
-          else if config.url?
-            cfg = betturl.parse(config.url)
-            for kk, vv of config when kk isnt 'url'
-              cfg[kk] = vv
-          else
-            cfg = config
-        catch err
-          console.log err.stack
+      v.connect(config) if config?
         
-        v.connect(cfg)
+        # try
+        #   if typeof config is 'string'
+        #     cfg = betturl.parse(config)
+        #   else if config.url?
+        #     cfg = betturl.parse(config.url)
+        #     for kk, vv of config when kk isnt 'url'
+        #       cfg[kk] = vv
+        #   else
+        #     cfg = config
+        # catch err
+        #   console.log err.stack
+        # 
+        # v.connect(cfg)
   
   @wrapper: (model) ->
     (data) ->
